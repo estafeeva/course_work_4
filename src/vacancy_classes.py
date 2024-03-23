@@ -1,7 +1,11 @@
 import re
+from datetime import datetime
+
+DT_FORMAT = "%Y-%m-%dT%H:%M:%S%z"
 class Vacancy:
     """класс для работы с вакансиями"""
-    def __init__(self, name, link, salary_from, salary_to, city, requirements):
+
+    def __init__(self, name, link, salary_from, salary_to, city, requirements, published_at):
         self.name = name
         self.link = link
         #self.salary = salary
@@ -16,6 +20,9 @@ class Vacancy:
             self.salary_to = salary_to
         else:
             self.salary_to = 0
+        self.__published_at = datetime.strptime(published_at, DT_FORMAT)
+
+
     def valid_salary(self):
         """Метод валидации данных: проверка, указана или
         нет зарплата, и вывод информации по вакансии"""
@@ -37,8 +44,8 @@ class Vacancy:
 
     def compare_salary(self, other):
         """метод сравнения вакансий между собой по зарплате"""
-        if self.salary_from == 0 or other.salary_from == 0:
-            return f"Минимальная зарплата не указаны."
+        if self.salary_from == 0 and other.salary_from == 0:
+            return f"Минимальные зарплата не указаны."
         elif self.salary_from < other.salary_from:
             return f"Минимальная зарплата по вакансии {other.name} больше чем по вакансии {self.name}."
         elif self.salary_from > other.salary_from:
@@ -46,8 +53,14 @@ class Vacancy:
         else:
             return f"Минимальные зарплаты по вакансиям {self.name} и {other.name} одинаковы."
 
-manager = Vacancy('Менеджер', "", 40000, False, "Москва", "Работать")
-developer = Vacancy('Программист', "", 60000, 110000, "Москва", "Писать код")
+    def __repr__(self):
+        return f"Вакансия {self.name}, опубликована {self.__published_at.strftime("%d.%m.%Y %H:%M")}"
 
-#print(manager.valid_salary())
-print(manager.compare_salary(developer))
+testdatetime = "2024-02-26T18:42:12+0300"
+
+manager = Vacancy('Менеджер', "", 40000, False, "Москва", "Работать", testdatetime)
+developer = Vacancy('Программист', "", 60000, 110000, "Москва", "Писать код", testdatetime)
+driver = Vacancy('Водитель', "", 0, 0, "Москва", "Писать код", testdatetime)
+
+#print(driver.valid_salary())
+#print(manager.compare_salary(developer))
